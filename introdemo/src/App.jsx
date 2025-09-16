@@ -30,7 +30,7 @@ const App = () => {
 
       <Hello name='Maya' age={26 + 10} />
       <Hello name={name} age={age} />
-      <footer />
+      <Footer />
     </div>
   )
 }
