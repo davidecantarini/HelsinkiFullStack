@@ -11,6 +11,14 @@ const Hello = (props) => {
   )
 }
 
+const footer = () => {
+  return (
+    <div>
+      greeting app created by <a href='https://github.com/mluukkai'>mluukkai</a>
+    </div>
+  )
+}
+
 const App = () => {
 
   const name = 'Peter'
@@ -22,6 +30,7 @@ const App = () => {
 
       <Hello name='Maya' age={26 + 10} />
       <Hello name={name} age={age} />
+      <footer />
     </div>
   )
 }
