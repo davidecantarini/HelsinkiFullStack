@@ -1,15 +1,16 @@
 const App = () => {
-  const friends = [
-    { name: 'Peter', age: 4 },
-    { name: 'Maya', age: 10 },
-  ]
+  const [ counter, setCounter ] = useState(0)
+
+  setTimeout(
+    () => setCounter(counter + 1),
+    1000
+  )
+
+
+  console.log('rendering...', counter)
 
   return (
-    <div>
-      <p>{friends[0]}</p>
-      <p>{friends[1]}</p>
-    </div>
+    <div>{counter}</div>
   )
 }
-
 export default App
