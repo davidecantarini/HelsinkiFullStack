@@ -1,49 +1,44 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-const History = (props) => {
-  if (props.allClicks.length === 0) {
-    return (
-      <div>
-        the app is used by pressing the buttons
+export default function App() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  return (
+    <div className="p-6 max-w-sm mx-auto">
+      <h1 className="text-xl font-bold mb-4">Give Feedback</h1>
+
+      <div className="flex gap-2 mb-6">
+        <button
+          onClick={() => setGood(good + 1)}
+          className="px-4 py-2 bg-green-500 text-white rounded"
+        >
+          Good
+        </button>
+        <button
+          onClick={() => setNeutral(neutral + 1)}
+          className="px-4 py-2 bg-gray-500 text-white rounded"
+        >
+          Neutral
+        </button>
+        <button
+          onClick={() => setBad(bad + 1)}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Bad
+        </button>
       </div>
-    )
-  }
 
-  return (
-    <div>
-      button press history: {props.allClicks.join(' ')}
+      <h2 className="text-lg font-semibold">Statistics</h2>
+      <ul className="list-disc ml-6 mt-2">
+        <li>Good: {good}</li>
+        <li>Neutral: {neutral}</li>
+        <li>Bad: {bad}</li>
+        <li>Total: {good + neutral + bad}</li>
+      </ul>
     </div>
-  )
+  );
 }
 
-
-const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
-
-const App = () => {
-  const [left, setLeft] = useState(0)
-  const [right, setRight] = useState(0)
-  const [allClicks, setAll] = useState([])
-
-  const handleLeftClick = () => {
-    setAll(allClicks.concat('L'))
-    setLeft(left + 1)
-  }
-
-  const handleRightClick = () => {
-    setAll(allClicks.concat('R'))
-    setRight(right + 1)
-  }
-
-  return (
-    <div>
-      {left}
-
-      <Button onClick={handleLeftClick} text='left' />
-      <Button onClick={handleRightClick} text='right' />
-      {right}
-      <History allClicks={allClicks} />
-    </div>
-  )
-}
-
-export default App
+export default App;
