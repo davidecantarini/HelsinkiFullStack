@@ -4,6 +4,13 @@ export default function App() {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const total = good + neutral + bad;
+  // average = (good*1 + neutral*0 + bad*(-1)) / total
+  const average = total === 0 ? 0 : (good - bad) / total;
+
+  // positive % = (good / total) * 100
+  const positive = total === 0 ? 0 : (good / total) * 100;
+
 
   return (
     <div className="p-6 max-w-sm mx-auto">
@@ -35,7 +42,9 @@ export default function App() {
         <li>Good: {good}</li>
         <li>Neutral: {neutral}</li>
         <li>Bad: {bad}</li>
-        <li>Total: {good + neutral + bad}</li>
+        <li>Total: {total}</li>
+        <li>Average: {average.toFixed(2)}</li>
+        <li>Positive: {positive.toFixed(1)}%</li>
       </ul>
     </div>
   );
