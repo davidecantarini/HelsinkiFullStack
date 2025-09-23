@@ -1,32 +1,28 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Note from './components/Note'
+import noteService from './services/notes'
+
 
 const App = () => {
   const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
 
-  // Fetch notes from backend
   useEffect(() => {
-    axios.get('http://localhost:3001/notes').then((response) => {
-      setNotes(response.data)
-    })
-  }, [])
+  noteService.getAll().then(initialNotes => {
+    setNotes(initialNotes)
+  })
+}, [])
 
-  // Add a new note
-  const addNote = (event) => {
-    event.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5,
-    }
+noteService.create(noteObject).then(returnedNote => {
+  setNotes(notes.concat(returnedNote))
+  setNewNote('')
+})
 
-    axios.post('http://localhost:3001/notes', noteObject).then((response) => {
-      setNotes(notes.concat(response.data))
-      setNewNote('')
-    })
-  }
+noteService.update(id, changedNote).then(returnedNote => {
+  setNotes(notes.map(note => note.id === id ? returnedNote : note))
+})
 
   const handleNoteChange = (event) => {
     setNewNote(event.target.value)
