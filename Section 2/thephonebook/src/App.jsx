@@ -1,17 +1,26 @@
 import { useState } from 'react'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]) 
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]) 
   const [newName, setNewName] = useState('')
+  const [message, setMessage] = useState('') // state for warning message
 
   const addPerson = (event) => {
     event.preventDefault()
 
-    const personObject = { name: newName }
-    setPersons(persons.concat(personObject))
-    setNewName('')
+    // Check if the name already exists
+    const nameExists = persons.some(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    )
+
+    if (nameExists) {
+      setMessage(`${newName} is already in the phonebook`)
+    } else {
+      const personObject = { name: newName }
+      setPersons(persons.concat(personObject))
+      setNewName('')
+      setMessage('') // clear message
+    }
   }
 
   return (
@@ -29,6 +38,9 @@ const App = () => {
           <button type="submit">add</button>
         </div>
       </form>
+
+      {/* Display message if there is one */}
+      {message && <div style={{ color: 'red' }}>{message}</div>}
 
       <h2>Numbers</h2>
       <ul>
