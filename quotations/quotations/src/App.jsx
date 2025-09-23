@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const App = () => {
   const anecdotes = [
@@ -13,8 +13,7 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
-  const [pos, setPos] = useState({ x: 100, y: 100 })
-  const [target, setTarget] = useState({ x: 100, y: 100 })
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
 
   // pick random anecdote
   const getRandomAnecdote = () => {
@@ -22,41 +21,33 @@ const App = () => {
     setSelected(randomIndex)
   }
 
-  // update target position when mouse moves
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setTarget({ x: e.clientX, y: e.clientY })
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+  // increase vote count for current anecdote
+  const voteAnecdote = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
+  }
 
-  // smooth movement towards target
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPos((prev) => ({
-        x: prev.x + (target.x - prev.x) * 0.1, // 0.1 = speed factor (smaller = slower)
-        y: prev.y + (target.y - prev.y) * 0.1
-      }))
-    }, 20) // update every 20ms
-    return () => clearInterval(interval)
-  }, [target])
+  // find index of anecdote with most votes
+  const maxVotesIndex = votes.indexOf(Math.max(...votes))
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
-      <button
-        onClick={getRandomAnecdote}
-        style={{
-          position: 'absolute',
-          left: pos.x,
-          top: pos.y,
-          transform: 'translate(-50%, -50%)',
-          transition: 'transform 0.1s linear'
-        }}
-      >
-        Next anecdote
-      </button>
+      <p>has {votes[selected]} votes</p>
+      <button onClick={voteAnecdote}>Vote</button>
+      <button onClick={getRandomAnecdote}>Next anecdote</button>
+
+      <h2>Anecdote with most votes</h2>
+      {Math.max(...votes) === 0 ? (
+        <p>No votes yet</p>
+      ) : (
+        <div>
+          <p>{anecdotes[maxVotesIndex]}</p>
+          <p>has {votes[maxVotesIndex]} votes</p>
+        </div>
+      )}
     </div>
   )
 }
