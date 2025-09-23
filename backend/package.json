@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "exercise",
+  "homepage": "https://github.com/davidecantarini/HelsinkiFullStack#readme",
+  "bugs": {
+    "url": "https://github.com/davidecantarini/HelsinkiFullStack/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidecantarini/HelsinkiFullStack.git"
+  },
+  "license": "ISC",
+  "author": "Davide Cantarini",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  }
+}
