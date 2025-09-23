@@ -1,25 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]) 
+  const [persons, setPersons] = useState([]) // start empty
   const [newName, setNewName] = useState('')
-  const [message, setMessage] = useState('') // state for warning message
+  const [message, setMessage] = useState('')
+
+  // Fetch initial data from db.json
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
 
-    // Check if the name already exists
     const nameExists = persons.some(
       (person) => person.name.toLowerCase() === newName.toLowerCase()
     )
 
     if (nameExists) {
       setMessage(`${newName} is already in the phonebook`)
+      setTimeout(() => setMessage(''), 3000) // optional: auto-hide message
     } else {
-      const personObject = { name: newName }
+      const personObject = { 
+        name: newName,
+        number: '123-456789', // temporary number for now
+        id: persons.length + 1 // simple id generation
+      }
+
       setPersons(persons.concat(personObject))
       setNewName('')
-      setMessage('') // clear message
+      setMessage('')
     }
   }
 
@@ -39,13 +53,12 @@ const App = () => {
         </div>
       </form>
 
-      {/* Display message if there is one */}
       {message && <div style={{ color: 'red' }}>{message}</div>}
 
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person, index) => (
-          <li key={index}>{person.name}</li>
+        {persons.map((person) => (
+          <li key={person.id}>{person.name} {person.number}</li>
         ))}
       </ul>
 
