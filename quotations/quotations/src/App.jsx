@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const App = () => {
   const anecdotes = [
@@ -11,22 +11,54 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
-  const [selected, setSelected] = useState(0)
 
-  // function to generate a random index
+  const [selected, setSelected] = useState(0)
+  const [pos, setPos] = useState({ x: 100, y: 100 })
+  const [target, setTarget] = useState({ x: 100, y: 100 })
+
+  // pick random anecdote
   const getRandomAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
     setSelected(randomIndex)
   }
 
+  // update target position when mouse moves
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setTarget({ x: e.clientX, y: e.clientY })
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
+  // smooth movement towards target
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPos((prev) => ({
+        x: prev.x + (target.x - prev.x) * 0.1, // 0.1 = speed factor (smaller = slower)
+        y: prev.y + (target.y - prev.y) * 0.1
+      }))
+    }, 20) // update every 20ms
+    return () => clearInterval(interval)
+  }, [target])
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <button onClick={getRandomAnecdote}>Next anecdote</button>
+      <button
+        onClick={getRandomAnecdote}
+        style={{
+          position: 'absolute',
+          left: pos.x,
+          top: pos.y,
+          transform: 'translate(-50%, -50%)',
+          transition: 'transform 0.1s linear'
+        }}
+      >
+        Next anecdote
+      </button>
     </div>
   )
 }
 
 export default App
-
