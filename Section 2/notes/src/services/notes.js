@@ -6,3 +6,4 @@ const create = newObject => axios.post(baseUrl, newObject).then(response => resp
 const update = (id, newObject) => axios.put(`${baseUrl}/${id}`, newObject).then(response => response.data)
 
 export default { getAll, create, update }
+ 
