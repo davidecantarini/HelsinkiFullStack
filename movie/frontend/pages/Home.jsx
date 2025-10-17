@@ -27,33 +27,54 @@ function Home() {
         loadPopularMovies();
 }, []);
 
-    const handleSearch = (e) => {
+    const handleSearch = async (e) => {
         e.preventDefault();
-        setSearchTerm("");
-    }
+        if (!searchTerm.trim()) return;
+        if (loading) return;
 
+        setLoading(true);
+        try {
+            const results = await searchMovies(searchTerm);
+                setMovies(results);
+                setError(null);
+            }
+        catch (error) {
+            setError("Failed to search movies.");
+            console.error(error);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+
+    console.log("Loading:", loading);
 
     return (
-        <div className="home">
-            <form onSubmit={handleSearch} className="search-form">
-                <input 
-                type="text" 
-                placeholder="Search movies..." 
-                className="search-input" 
-                value = {searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}/>
-                <button type="submit" className="search-button">Search</button>
-            </form>
-    
-            <div className="movie-grid">
-            {movies.map(
-                (movie) => 
-                movie.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-                <MovieCard movie={movie} key={movie.id} />
-            )}
-            </div>
-        </div>
-);
-}
+  <div className="home">
+    <form onSubmit={handleSearch} className="search-form">
+      <input 
+        type="text" 
+        placeholder="Search movies..." 
+        className="search-input" 
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <button type="submit" className="search-button">Search</button>
+    </form>
 
+    {loading ? (
+      <div className="loading">Loading movies...</div>
+    ) : error ? (
+      <div className="error">{error}</div>
+    ) : (
+      <div className="movie-grid">
+        {movies.map((movie) => (
+          <MovieCard movie={movie} key={movie.id} />
+        ))}
+      </div>
+    )}
+  </div>
+);
+
+}
 export default Home
